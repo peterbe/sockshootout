@@ -18,8 +18,9 @@ class AjaxHandler(tornado.web.RequestHandler):
 
 class AjaxEchoHandler(tornado.web.RequestHandler):
     def get(self):
-        msg = self.get_argument('msg')
-        self.write(msg.upper())
+        count =self.get_argument('count')
+        data = {'count': int(count) + 1}
+        self.write(data)
 
 def app():
     app_settings = dict(
