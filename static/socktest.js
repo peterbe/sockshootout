@@ -7,9 +7,8 @@ SockJS.prototype.send_json = function(data) {
 var loop = (function() {
   var data_function;
   var sock;
-
   var initsock = function(callback) {
-    sock = new SockJS('http://localhost:9999/echo');
+    sock = new SockJS('http://' + location.hostname + ':9999/echo');
 
     sock.onmessage = function(e) {
       master_count = e.data.count;

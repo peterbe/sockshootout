@@ -22,6 +22,13 @@ class AjaxEchoHandler(tornado.web.RequestHandler):
         data = {'count': int(count) + 1}
         self.write(data)
 
+class HomeHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write("""<html>
+        <a href=/socktest>socktest</a><br>
+        <a href=/ajaxtest>ajaxtest</a><br>
+        </html>""")
+
 def app():
     app_settings = dict(
       static_path=os.path.join(os.path.dirname(__file__), "static"),
@@ -30,6 +37,7 @@ def app():
 
     )
     return tornado.web.Application([
+        (r"/", HomeHandler),
         (r"/socktest", SockHandler),
         (r"/ajaxtest", AjaxHandler),
         (r"/ajaxecho", AjaxEchoHandler),
