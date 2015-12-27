@@ -2,15 +2,12 @@ import os
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
+import tornado.websocket
 from tornado.options import define, options
 
-define("debug", default=False, help="run in debug mode", type=bool)
+define("debug", default=True, help="run in debug mode", type=bool)
 define("port", default=8000, help="run on the given port", type=int)
 
-
-class SockHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render("socktest.html")
 
 class AjaxHandler(tornado.web.RequestHandler):
     def get(self):
@@ -22,12 +19,13 @@ class AjaxEchoHandler(tornado.web.RequestHandler):
         data = {'count': int(count) + 1}
         self.write(data)
 
+
 class HomeHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("""<html>
-        <a href=/socktest>socktest</a><br>
         <a href=/ajaxtest>ajaxtest</a><br>
         </html>""")
+
 
 def app():
     app_settings = dict(
@@ -38,9 +36,9 @@ def app():
     )
     return tornado.web.Application([
         (r"/", HomeHandler),
-        (r"/socktest", SockHandler),
         (r"/ajaxtest", AjaxHandler),
         (r"/ajaxecho", AjaxEchoHandler),
+
     ], **app_settings)
 
 
