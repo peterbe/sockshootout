@@ -1,4 +1,4 @@
-import os
+import os, logging
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
@@ -19,11 +19,37 @@ class AjaxEchoHandler(tornado.web.RequestHandler):
         data = {'count': int(count) + 1}
         self.write(data)
 
+class WebsocketTestHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render('websockettest.html')
+
+class WebsocketTalkHandler(tornado.websocket.WebSocketHandler):
+    waiters = set()
+
+    def get_compression_options(self):
+        return {}
+
+    def open(self):
+        WebsocketTalkHandler.waiters.add(self)
+
+    def on_close(self):
+        WebsocketTalkHandler.waiters.remove(self)
+
+    @classmethod
+    def send_updates(cls, chat):
+        #logging.info("sending message to %d waiters", len(cls.waiters))
+        for waiter in cls.waiters:
+            waiter.write_message(chat)
+
+    def on_message(self, message):
+        chat = { "count": int(message)+1 }
+        WebsocketTalkHandler.send_updates(chat)
 
 class HomeHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("""<html>
         <a href=/ajaxtest>ajaxtest</a><br>
+        <a href=/websockettest>websockettest</a><br>
         </html>""")
 
 
@@ -38,6 +64,8 @@ def app():
         (r"/", HomeHandler),
         (r"/ajaxtest", AjaxHandler),
         (r"/ajaxecho", AjaxEchoHandler),
+        (r"/websockettest", WebsocketTestHandler),
+        (r"/websockettalk", WebsocketTalkHandler),
 
     ], **app_settings)
 
