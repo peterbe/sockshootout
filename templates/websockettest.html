@@ -16,7 +16,7 @@
 <button>Start!</button>
 </form>
 
-<!-- <script src="static/common.js"></script> -->
+<script src="static/common.js"></script>
 
 <script>
 
@@ -28,13 +28,12 @@ $(document).ready(function() {
     	updater.socket.send(0)
         return false;
     });
+
+    t1 = new Date();
+    max_master_count = parseInt($('#iterations').val());
     
     updater.start();
 });
-
-function newMessage(str) {
-    updater.socket.send(str);
-}
 
 var updater = {
     socket: null,
@@ -49,11 +48,11 @@ var updater = {
 
     showMessage: function(message) {
         console.log(message.count);
-        if (message.count < 100) {
+        if (message.count < max_master_count) {
         	updater.socket.send(message.count);	
         }
         else{
-        	alert('bitti');
+        	finish();
         };
                
     }

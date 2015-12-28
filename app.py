@@ -24,13 +24,13 @@ class WebsocketTestHandler(tornado.web.RequestHandler):
         self.render('websockettest.html')
 
 class WebsocketTalkHandler(tornado.websocket.WebSocketHandler):
-    waiters = set()
+    waiters = []
 
     def get_compression_options(self):
         return {}
 
     def open(self):
-        WebsocketTalkHandler.waiters.add(self)
+        WebsocketTalkHandler.waiters.append(self)
 
     def on_close(self):
         WebsocketTalkHandler.waiters.remove(self)
@@ -38,10 +38,12 @@ class WebsocketTalkHandler(tornado.websocket.WebSocketHandler):
     @classmethod
     def send_updates(cls, chat):
         #logging.info("sending message to %d waiters", len(cls.waiters))
-        for waiter in cls.waiters:
-            waiter.write_message(chat)
+        cls.waiters[0].write_message(chat)
+        # for waiter in cls.waiters:
+        #     waiter.write_message(chat)
 
     def on_message(self, message):
+        print(message)
         chat = { "count": int(message)+1 }
         WebsocketTalkHandler.send_updates(chat)
 
