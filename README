@@ -1,14 +1,10 @@
-Work in progress. An experiment to see how much faster Websockets are
-compared to jQuery AJAX.
+Work in progress. An experiment to see how much faster Websockets are compared to jQuery AJAX.
 
-To test, start the two servers:
+To test, start the server:
 
- $ python sock_app.py --logging=error [--debug]
- $ python app.py --port=8888 --logging=error [--debug]
+ $ python app.py
  
-Then visit: http://localhost:8888/ajaxtest and
-http://localhost:8888/socktest
-
+Then visit: http://localhost:8000/
 
   
  
