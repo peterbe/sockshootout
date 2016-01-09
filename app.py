@@ -16,7 +16,8 @@ class AjaxHandler(tornado.web.RequestHandler):
 class AjaxEchoHandler(tornado.web.RequestHandler):
     def get(self):
         count =self.get_argument('count')
-        data = {'count': int(count) + 1}
+        body =self.get_argument('body')
+        data = {'count': int(count) + 1, 'body':body}
         self.write(data)
 
 class WebsocketTestHandler(tornado.web.RequestHandler):
@@ -36,16 +37,16 @@ class WebsocketTalkHandler(tornado.websocket.WebSocketHandler):
         WebsocketTalkHandler.waiters.remove(self)
 
     @classmethod
-    def send_updates(cls, chat):
+    def send_updates(cls, message):
         #logging.info("sending message to %d waiters", len(cls.waiters))
-        cls.waiters[0].write_message(chat)
+        cls.waiters[0].write_message(message)
         # for waiter in cls.waiters:
-        #     waiter.write_message(chat)
+        #     waiter.write_message(message)
 
     def on_message(self, message):
-        print(message)
-        chat = { "count": int(message)+1 }
-        WebsocketTalkHandler.send_updates(chat)
+        parsed = tornado.escape.json_decode(message)
+        parsed['count'] = int(parsed['count'])+1
+        WebsocketTalkHandler.send_updates(parsed)
 
 class HomeHandler(tornado.web.RequestHandler):
     def get(self):

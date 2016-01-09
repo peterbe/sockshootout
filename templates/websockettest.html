@@ -25,7 +25,7 @@ $(document).ready(function() {
     if (!window.console.log) window.console.log = function() {};
 
     $("form").live("submit", function() {
-    	updater.socket.send(0)
+    	updater.socket.send('{"count":0, "body":"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere iste quam, iure id illum consequatur laboriosam distinctio laudantium dolore totam officiis modi, ipsa enim sequi velit ex corporis consequuntur pariatur."}')
         return false;
     });
 
@@ -47,9 +47,9 @@ var updater = {
     },
 
     showMessage: function(message) {
-        console.log(message.count);
+        //console.log(message);
         if (message.count < max_master_count) {
-        	updater.socket.send(message.count);	
+        	updater.socket.send(JSON.stringify(message));	
         }
         else{
         	finish();
