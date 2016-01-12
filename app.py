@@ -36,6 +36,7 @@ class WebsocketTalkHandler(tornado.websocket.WebSocketHandler):
     @classmethod
     def send_updates(cls, message):
         #logging.info("sending message to %d waiters", len(cls.waiters))
+        logging.info("%s" % message['count'])
         cls.waiters[0].write_message(message)
         # for waiter in cls.waiters:
         #     waiter.write_message(message)
