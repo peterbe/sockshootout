@@ -27,9 +27,6 @@ class WebsocketTestHandler(tornado.web.RequestHandler):
 class WebsocketTalkHandler(tornado.websocket.WebSocketHandler):
     waiters = []
 
-    def get_compression_options(self):
-        return {}
-
     def open(self):
         WebsocketTalkHandler.waiters.append(self)
 
