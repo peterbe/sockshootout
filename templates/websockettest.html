@@ -49,6 +49,7 @@ var updater = {
     showMessage: function(message) {
         //console.log(message);
         if (message.count < max_master_count) {
+            master_count = message.count;
         	updater.socket.send(JSON.stringify(message));	
         }
         else{
